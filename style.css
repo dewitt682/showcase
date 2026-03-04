@@ -1,0 +1,378 @@
+:root {
+    --primary-color: #ff4d6d;
+    --secondary-color: #ff758f;
+    --bg-color: #0d0d0d;
+    --text-color: #ffffff;
+    --timeline-color: rgba(255, 255, 255, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #1a0b1a 0%, #0d0d0d 100%);
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* 流光背景效果 - 加强流动感 */
+.background::before, .background::after {
+    content: '';
+    position: absolute;
+    width: 250%;
+    height: 250%;
+    top: -75%;
+    left: -75%;
+    background: radial-gradient(circle, rgba(255, 77, 109, 0.12) 0%, transparent 50%),
+                radial-gradient(circle, rgba(255, 20, 147, 0.08) 0%, transparent 50%);
+    background-position: 0 0, 50% 50%;
+    background-size: 50% 50%;
+    animation: flowLight 15s ease-in-out infinite;
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(40px);
+}
+
+.background::after {
+    background: radial-gradient(circle, rgba(255, 105, 180, 0.1) 0%, transparent 50%),
+                radial-gradient(circle, rgba(139, 0, 0, 0.06) 0%, transparent 50%);
+    background-position: 50% 0, 0 50%;
+    animation: flowLight 20s ease-in-out infinite reverse;
+}
+
+@keyframes flowLight {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    33% { transform: translate(5%, 5%) rotate(120deg) scale(1.1); }
+    66% { transform: translate(-5%, 2%) rotate(240deg) scale(0.9); }
+    100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+}
+
+/* 1. 指纹区域 */
+#fingerprint-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 1s ease, transform 1s ease;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#fingerprint-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -60%);
+}
+
+.fingerprint-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.fingerprint-icon {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 2px solid rgba(255, 77, 109, 0.3);
+    border-radius: 50%;
+    padding: 15px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 77, 109, 0.05);
+}
+
+.fingerprint-icon:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 30px rgba(255, 77, 109, 0.4);
+}
+
+.fingerprint-icon.scanning {
+    animation: scanPulse 2s infinite;
+}
+
+@keyframes scanPulse {
+    0%, 100% { 
+        box-shadow: 0 0 15px rgba(255, 77, 109, 0.2); 
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 40px rgba(255, 77, 109, 0.5); 
+        transform: scale(1.02);
+    }
+}
+
+.finger-svg {
+    width: 100%;
+    height: 100%;
+    color: var(--primary-color);
+    filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.5));
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 5%;
+    width: 90%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+    box-shadow: 0 0 15px var(--primary-color), 0 0 5px var(--secondary-color);
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 2;
+    filter: blur(0.5px);
+}
+
+/* 增加一个随动的光晕层，让扫描更有质感 */
+.scan-line::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 100%;
+    height: 16px;
+    background: radial-gradient(ellipse at center, rgba(255, 77, 109, 0.5) 0%, transparent 80%);
+    filter: blur(4px);
+}
+
+.scanning .scan-line {
+    animation: scan 2.5s ease-in-out infinite;
+    opacity: 1;
+}
+
+@keyframes scan {
+    0%, 100% { 
+        top: 15%; 
+        transform: scaleX(0.85);
+        opacity: 0.4;
+    }
+    50% { 
+        top: 85%; 
+        transform: scaleX(1.05);
+        opacity: 1;
+    }
+}
+
+.hint-text {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 2px;
+}
+
+/* 2. 时间轴区域 */
+#timeline-container {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 75%;
+    opacity: 0;
+    transition: opacity 1s ease;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#timeline-container.active {
+    opacity: 1;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 0;
+    background: linear-gradient(to bottom, transparent, var(--primary-color), var(--secondary-color), transparent);
+    transform: translateX(-50%);
+    transition: height 12s linear;
+    box-shadow: 0 0 15px var(--primary-color);
+}
+
+.timeline-nodes {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.node {
+    position: relative;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.node.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.node-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background: var(--bg-color);
+    border: 3px solid var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--primary-color);
+    z-index: 2;
+}
+
+.node.visible .node-dot {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 77, 109, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
+}
+
+.node-content {
+    width: 42%;
+    background: rgba(255, 77, 109, 0.1);
+    border: 1px solid rgba(255, 77, 109, 0.3);
+    border-radius: 12px;
+    padding: 15px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.node-content::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 2px;
+    background: rgba(255, 77, 109, 0.5);
+    transform: translateY(-50%);
+}
+
+.node.left .node-content {
+    margin-right: 50%;
+    text-align: right;
+}
+
+.node.left .node-content::before {
+    right: -20px;
+}
+
+.node.right .node-content {
+    margin-left: 50%;
+    text-align: left;
+}
+
+.node.right .node-content::before {
+    left: -20px;
+}
+
+.node-date {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    text-shadow: 0 0 5px rgba(255, 77, 109, 0.5);
+}
+
+.node-text {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.4;
+}
+
+/* 3. 烟花画布 */
+#fireworks-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* 4. 3D 玫瑰容器 */
+#rose-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* 5. 底部文字 */
+#final-text {
+    position: absolute;
+    bottom: 10%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 2s ease;
+    z-index: 10;
+}
+
+#final-text.visible {
+    opacity: 1;
+}
+
+#final-text p {
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: var(--secondary-color);
+    text-shadow: 0 0 10px rgba(255, 117, 143, 0.5);
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>浪漫指纹时间轴</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 背景层 -->
+        <div class="background"></div>
+
+        <!-- 1. 指纹按压区域 -->
+        <div id="fingerprint-container" class="active">
+            <div class="fingerprint-wrapper">
+                <div class="fingerprint-icon">
+                    <svg viewBox="0 0 100 100" class="finger-svg">
+                        <path d="M50,10 C30,10 15,25 15,45 C15,55 20,65 25,70 M50,20 C35,20 25,30 25,45 C25,55 30,62 35,65 M50,30 C42,30 35,37 35,45 C35,50 38,55 42,57 M50,40 C47,40 45,42 45,45 C45,47 47,49 50,49 M50,10 C70,10 85,25 85,45 C85,55 80,65 75,70 M50,20 C65,20 75,30 75,45 C75,55 70,62 65,65 M50,30 C58,30 65,37 65,45 C65,50 62,55 58,57 M50,40 C53,40 55,42 55,45 C55,47 53,49 50,49" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M50,60 C50,65 45,70 40,75 M50,60 C50,65 55,70 60,75 M50,70 C50,80 40,90 30,90 M50,70 C50,80 60,90 70,90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <div class="scan-line"></div>
+                </div>
+                <p class="hint-text">长按指纹开启回忆</p>
+            </div>
+        </div>
+
+        <!-- 2. 时间轴区域 -->
+        <div id="timeline-container">
+            <div class="timeline-line"></div>
+            <div class="timeline-nodes">
+                <div class="node left" id="node-1">
+                    <div class="node-content">
+                        <div class="node-date">1月11日</div>
+                        <div class="node-text">初遇的悸动，一眼万年</div>
+                    </div>
+                    <div class="node-dot"></div>
+                </div>
+                <div class="node right" id="node-2">
+                    <div class="node-dot"></div>
+                    <div class="node-content">
+                        <div class="node-date">1月29日</div>
+                        <div class="node-text">两颗心慢慢靠近</div>
+                    </div>
+                </div>
+                <div class="node left" id="node-3">
+                    <div class="node-content">
+                        <div class="node-date">2月14日</div>
+                        <div class="node-text">浪漫的情人节告白</div>
+                    </div>
+                    <div class="node-dot"></div>
+                </div>
+                <div class="node right" id="node-4">
+                    <div class="node-dot"></div>
+                    <div class="node-content">
+                        <div class="node-date">3月29日</div>
+                        <div class="node-text">携手共赴未来</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 烟花画布 -->
+        <canvas id="fireworks-canvas"></canvas>
+
+        <!-- 4. 3D 玫瑰容器 -->
+        <div id="rose-container"></div>
+
+        <!-- 5. 底部文字 -->
+        <div id="final-text" class="hidden">
+            <p>愿每一份美好都如约而至</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
