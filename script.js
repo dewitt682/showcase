@@ -62,16 +62,23 @@ function startTimelineAnimation() {
     // 时间轴线条向下延伸
     timelineLine.style.height = '100%';
     
-    // 节点依次出现 - 调慢速度，给用户更多阅读时间
-    const nodeDelays = [2000, 5000, 8000, 11000];
+    // 【修改区】：自动计算节点延迟时间，不管 HTML 里加了多少个节点都能自动适应
+    const initialDelay = 2000; // 第 1 个节点出现的延迟（2秒）
+    const interval = 3000;     // 之后每个节点依次出现的间隔时间（3秒）
+    
     nodes.forEach((node, index) => {
+        // 自动算出当前节点该在什么时候出现
+        const delayTime = initialDelay + (index * interval);
+        
         setTimeout(() => {
             node.classList.add('visible');
+            
+            // 如果是最后一个节点出现了，才去触发最终的烟花和玫瑰
             if (index === nodes.length - 1) {
-                // 最后一个节点出现后，等待一会儿开启烟花和玫瑰
+                // 等待最后一个节点阅读 3 秒后，开启庆祝环节
                 setTimeout(triggerCelebration, 3000);
             }
-        }, nodeDelays[index]);
+        }, delayTime);
     });
 }
 
@@ -531,6 +538,7 @@ window.addEventListener('resize', () => {
     fireworksCanvas.height = window.innerHeight;
 
 });
+
 
 
 
