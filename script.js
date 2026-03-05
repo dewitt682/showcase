@@ -348,7 +348,7 @@ function initThreeJS() {
     loader.load('flower.gltf', 
         (gltf) => {
             roseModel = gltf.scene;
-            roseModel.position.y = -1.5;
+            roseModel.position.y = -3.5;
             scene.add(roseModel);
 
             // 修复网络延迟问题：如果下载完时已经到了出场时间(phase=2)，直接出场！
@@ -531,6 +531,7 @@ window.addEventListener('resize', () => {
     fireworksCanvas.height = window.innerHeight;
 
 });
+
 
 
 
