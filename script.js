@@ -62,20 +62,20 @@ function startTimelineAnimation() {
     // 时间轴线条向下延伸
     timelineLine.style.height = '100%';
     
-    // 【修改区】：自动计算节点延迟时间，不管 HTML 里加了多少个节点都能自动适应
-    const initialDelay = 2000; // 第 1 个节点出现的延迟（2秒）
-    const interval = 3000;     // 之后每个节点依次出现的间隔时间（3秒）
+    // 【核心修改】：通过算术动态计算每个节点的延迟时间
+    const initialDelay = 2000; // 第一个节点出现的延迟（毫秒）
+    const interval = 3000;     // 后面每个节点依次出现的间隔（3000毫秒 = 3秒）
     
     nodes.forEach((node, index) => {
-        // 自动算出当前节点该在什么时候出现
+        // 当前节点应该在什么时候触发动画
         const delayTime = initialDelay + (index * interval);
         
         setTimeout(() => {
-            node.classList.add('visible');
+            node.classList.add('visible'); // 触发当前节点的 CSS 动画
             
-            // 如果是最后一个节点出现了，才去触发最终的烟花和玫瑰
+            // 判断当前是不是最后一个节点
             if (index === nodes.length - 1) {
-                // 等待最后一个节点阅读 3 秒后，开启庆祝环节
+                // 如果是最后一个节点出来了，给用户留 3 秒钟阅读，然后触发烟花和玫瑰
                 setTimeout(triggerCelebration, 3000);
             }
         }, delayTime);
@@ -538,6 +538,7 @@ window.addEventListener('resize', () => {
     fireworksCanvas.height = window.innerHeight;
 
 });
+
 
 
 
